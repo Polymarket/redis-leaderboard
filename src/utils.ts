@@ -1,22 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import * as _ from "lodash";
-
-type Position = {
-    user: { id: string };
-    netQuantity: string;
-    market: { outcomeTokenPrices: string[] };
-    outcomeIndex: number;
-    valueSold: string;
-    valueBought: string;
-};
-export type LeaderBoardPosition = {
-    user: string;
-    invested: number;
-    earnings: number;
-    roi: number;
-};
-
-
+import { LeaderBoardPosition, Position, BoardData } from "./interfaces";
 
 // Following two functions taken from https://github.com/TokenUnion/amm-maths/blob/master/src/utils.ts by Tom French
 /**
@@ -136,10 +120,13 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
  */
 export const getTopTen = (
     aggregatedPositions: LeaderBoardPosition[],
-): LeaderBoardPosition[] => {
+): BoardData => {
     aggregatedPositions.sort((a, b) =>
         Number(a.earnings) > Number(b.earnings) ? -1 : 1,
     );
-    const topTen = aggregatedPositions.slice(0, 10);
+    const board: LeaderBoardPosition[] = aggregatedPositions.slice(0, 10);
+    const topTen: BoardData = {
+        leaderBoardPositions: board,
+    };
     return topTen;
 };

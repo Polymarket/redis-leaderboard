@@ -1,12 +1,7 @@
 import { ApolloClient, gql } from "@apollo/client/core";
 import { InMemoryCache } from "@apollo/client/cache";
 import "cross-fetch/polyfill";
-import {
-    getAllPositions,
-    getAggregatedPositions,
-    getTopTen,
-    LeaderBoardPosition,
-} from "./utils";
+import { getAllPositions, getAggregatedPositions, getTopTen } from "./utils";
 
 const getLeaderboardDataQuery = gql`
     query positions($marketAddress: String!) {
