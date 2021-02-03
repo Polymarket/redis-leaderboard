@@ -23,6 +23,13 @@ app.use(express.json());
 const port = process.env.PORT || 8000;
 
 const CACHE_TTL = 1000 * 60 * 60;
+
+app.get("/", async (req, res) => {
+    res.send({
+        instructions:
+            "Just make a GET /leaderboard/:marketMakerAddress to retrieve the leaderboard data",
+    });
+});
 const updateCache = (
     marketMakerAddress: string,
     data: BoardData,
