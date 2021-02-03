@@ -22,9 +22,14 @@ const getLeaderboardDataQuery = gql`
 
 const client = new ApolloClient({
     uri:
+        process.env.SUBGRAPH_URL ||
         "https://subgraph-matic.poly.market/subgraphs/name/TokenUnion/polymarket",
     cache: new InMemoryCache(),
 });
+/**
+ * @function getLeaderboardData - fetches market data and calculates top ten traders for a given market address
+ * @param {string} marketMakerAddress - the market address 
+ */
 export const getLeaderboardData = async (marketMakerAddress: string) => {
     const data = await client.query({
         query: getLeaderboardDataQuery,
