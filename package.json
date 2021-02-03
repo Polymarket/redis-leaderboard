@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "scripts": {
     "start": "ts-node src/server.ts",
-    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon src/server.ts"
+    "dev": "NODE_TLS_REJECT_UNAUTHORIZED='0' nodemon src/server.ts",
+    "build": "tsc"
   },
   "nodemonConfig": {
     "watch": [
