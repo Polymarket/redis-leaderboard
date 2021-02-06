@@ -2,11 +2,7 @@ import redis from "redis";
 import express from "express";
 import cors from "cors";
 import { getLeaderboardData } from "./getLeaderboardData";
-import {
-    LeaderBoardPosition,
-    RedisLeaderBoardPositions,
-    BoardData,
-} from "./interfaces";
+import { RedisLeaderBoardPositions, BoardData } from "./interfaces";
 
 const client = redis.createClient({
     url:

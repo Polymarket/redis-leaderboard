@@ -1,6 +1,7 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import * as _ from "lodash";
+import { groupBy }  from "lodash";
 import { LeaderBoardPosition, Position, BoardData } from "./interfaces";
+
 
 // Following two functions taken from https://github.com/TokenUnion/amm-maths/blob/master/src/utils.ts by Tom French
 /**
@@ -83,7 +84,7 @@ export const getAllPositions = (data: Array<Position>) => {
  */
 export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
     const aggregatedPositions: LeaderBoardPosition[] = [];
-    const positionsByUser = _.groupBy(
+    const positionsByUser = groupBy(
         allPositions,
         (position) => position.user,
     );
