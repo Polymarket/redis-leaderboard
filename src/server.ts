@@ -3,6 +3,7 @@ import express from "express";
 import cors from "cors";
 import { getLeaderboardData } from "./getLeaderboardData";
 import { RedisLeaderBoardPositions, BoardData } from "./interfaces";
+import getGlobalLeaderboardData from "./getGlobalLeadeboardData";
 
 const client = redis.createClient({
     url:
@@ -78,6 +79,60 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
                 // Update the data secretly
                 const newData = await getLeaderboardData(marketMakerAddress);
                 updateCache(marketMakerAddress, newData, redis.print);
+            });
+        }
+    });
+});
+const updateGlobalCache = (
+    data: BoardData,
+    callback: (err: Error | null, reply: string) => void,
+) => {
+    const cachedData: RedisLeaderBoardPositions = {
+        ...data,
+        lastUpdate: new Date().getTime(),
+    };
+    console.log("cachedData", cachedData);
+
+    client.set("globalLeaderboard", JSON.stringify(cachedData), callback);
+};
+
+app.get("/globalLeaderboard", async (req, res) => {
+   
+
+    client.get("/globalLeaderboard", async (_err, reply) => {
+        console.log("reply", reply);
+        if (!reply) {
+            console.log("Talking to subgraph");
+
+            const data = await getGlobalLeaderboardData();
+            if (!data) {
+                console.log("No data found");
+                return res.status(404).send({ status: "Not Found" });
+            }
+
+            console.log("!reply data", data);
+            updateGlobalCache( data, redis.print);
+            return res.json(data);
+        }
+        console.log("Reply exists reply", reply);
+        const data: RedisLeaderBoardPositions = JSON.parse(reply);
+        res.json(data);
+
+        // Update if expired
+        if (
+            !data.lastUpdate ||
+            data.lastUpdate + CACHE_TTL < new Date().getTime()
+        ) {
+            // Update cache with current data then overwrite
+            // This avoids re-fetching tens of times
+            updateGlobalCache( data, async () => {
+                console.log(
+                    "Data Reupdate in global board",
+                  
+                );
+                // Update the data secretly
+                const newData = await getGlobalLeaderboardData();
+                updateGlobalCache(newData, redis.print);
             });
         }
     });

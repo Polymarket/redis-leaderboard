@@ -62,6 +62,7 @@ export const getROI = (position: Position) => {
  */
 export const getAllPositions = (data: Array<Position>) => {
     const allPositions: LeaderBoardPosition[] = [];
+    console.log(data);
     data.forEach((position: Position) => {
         const earnings = getEarnings(position);
         const roi = getROI(position);

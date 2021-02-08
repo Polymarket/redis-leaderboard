@@ -19,3 +19,4 @@ export interface LeaderBoardPosition {
 export interface RedisLeaderBoardPositions extends BoardData {
     lastUpdate: number;
 }
+
