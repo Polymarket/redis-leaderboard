@@ -3,10 +3,11 @@ import { InMemoryCache } from "@apollo/client/cache";
 import "cross-fetch/polyfill";
 import { getAllPositions, getAggregatedPositions, getTopTen } from "./utils";
 
+
 const getGlobalLeaderboardDataQuery = gql`
      
 {
-    marketPositions(where: { valueBought_gt: 0 }){
+    marketPositions(where: {valueBought_gt: 0 }){
         user {
             id
         }

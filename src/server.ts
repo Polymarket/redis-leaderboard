@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 8000;
 
-const CACHE_TTL = 1000 * 60 * 60;
+const CACHE_TTL = 1000;
 
 app.get("/", async (req, res) => {
     res.send({
@@ -99,7 +99,7 @@ const updateGlobalCache = (
 app.get("/globalLeaderboard", async (req, res) => {
    
 
-    client.get("/globalLeaderboard", async (_err, reply) => {
+    client.get("globalLeaderboard", async (_err, reply) => {
         console.log("reply", reply);
         if (!reply) {
             console.log("Talking to subgraph");

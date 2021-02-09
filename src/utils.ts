@@ -36,7 +36,7 @@ export const getEarnings = (position: Position) => {
     const valueSold = BigNumber.from(position.valueSold);
     const valueBought = BigNumber.from(position.valueBought);
     const netValue = mulBN(netQuantity, outcomeTokenPrice);
-    return netValue.add(valueSold).sub(valueBought).toNumber();
+    return netValue.add(valueSold).sub(valueBought);
 };
 
 /**
@@ -68,8 +68,8 @@ export const getAllPositions = (data: Array<Position>) => {
         const roi = getROI(position);
         const positionObject = {
             user: position.user.id,
-            earnings,
-            invested: Number(position.valueBought),
+            earnings : earnings.toString(),
+            invested: position.valueBought,
             roi,
         };
 
@@ -90,14 +90,15 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
         (position) => position.user,
     );
 
+
     Object.values(positionsByUser).forEach((position) => {
-        const totalInvested = Object.values(position).reduce(
-            (t, { invested }) => t + invested,
-            0,
+        const totalInvested = Object.values(position).reduce<BigNumber>(
+            (t, { invested }) => t.add( BigNumber.from(invested)),
+            BigNumber.from(0),
         );
-        const totalEarnings = Object.values(position).reduce(
-            (t, { earnings }) => t + earnings,
-            0,
+        const totalEarnings = Object.values(position).reduce<BigNumber>(
+            (t, { earnings }) => t.add(BigNumber.from(earnings)),
+            BigNumber.from(0),
         );
         const totalROI = Object.values(position).reduce(
             (t, { roi }) => t + roi,
@@ -106,8 +107,8 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
 
         const obj = {
             user: position[0].user,
-            invested: totalInvested,
-            earnings: totalEarnings,
+            invested: totalInvested.toString(),
+            earnings: totalEarnings.toString(),
             roi: totalROI,
         };
         aggregatedPositions.push(obj);
@@ -123,8 +124,8 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
 export const getTopTen = (
     aggregatedPositions: LeaderBoardPosition[],
 ): BoardData => {
-    aggregatedPositions.sort((a, b) =>
-        Number(a.earnings) > Number(b.earnings) ? -1 : 1,
+    aggregatedPositions.sort((a, b) => {
+        return a.invested < b.invested ? 1 : a.invested > b.invested ? -1 : 0; }
     );
     const board: LeaderBoardPosition[] = aggregatedPositions.slice(0, 10);
     const topTen: BoardData = {
