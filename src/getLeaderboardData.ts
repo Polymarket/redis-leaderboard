@@ -5,7 +5,7 @@ import { getAllPositions, getAggregatedPositions, getTopTen } from "./utils";
 
 const getLeaderboardDataQuery = gql`
     query positions($marketAddress: String!) {
-        marketPositions(where: { market: $marketAddress, valueBought_gt: 0 }) {
+        marketPositions(where: { market: $marketAddress, valueBought_gt: 0 }, first: 1000) {
             user {
                 id
             }

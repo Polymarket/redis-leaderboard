@@ -7,7 +7,7 @@ import { getAllPositions, getAggregatedPositions, getTopTen } from "./utils";
 const getGlobalLeaderboardDataQuery = gql`
      
 {
-    marketPositions(where: {valueBought_gt: 0 }){
+    marketPositions(where: {valueBought_gt: 0 }, first: 1000){
         user {
             id
         }
