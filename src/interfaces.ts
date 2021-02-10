@@ -3,6 +3,9 @@ import { BigNumber } from "@ethersproject/bignumber";
 export interface BoardData {
     leaderBoardPositions: LeaderBoardPosition[];
 }
+export interface QueryData {
+    marketPositions : Position[];
+}
 
 export interface Position {
     user: { id: string };
