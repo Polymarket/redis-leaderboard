@@ -29,7 +29,7 @@ const divBN = (a: BigNumber, b: BigNumberish, scale = 10000): number => {
  @param {Object} position - the market position object
  */
 export const getEarnings = (position: MarketPosition) => {
-     console.log(position)
+
     const netQuantity = BigNumber.from(position.netQuantity);
     const outcomeTokenPrice = Number(
         position.market.outcomeTokenPrices[Number(position.outcomeIndex)],
