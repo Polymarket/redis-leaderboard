@@ -106,10 +106,8 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
         if (totalEarnings.lt(0)){
             return
         }
-        const totalROI = Object.values(position).reduce(
-            (t, { roi }) => t + roi,
-            0,
-        );
+        const totalROI =  divBN(totalEarnings, totalInvested) * 100;
+        
 
         const obj = {
             user: position[0].user,

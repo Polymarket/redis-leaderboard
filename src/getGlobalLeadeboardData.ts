@@ -8,7 +8,7 @@ import {MarketPosition} from "./interfaces";
 const getGlobalLeaderboardDataQuery = gql`
      
 query positions($skipValue: Int!)         {
-    marketPositions(where: {valueBought_gt: 0 }, first: 1000, skip: $skipValue){
+    marketPositions(where: {valueBought_gt: 0}, first: 1000, skip: $skipValue){
         user {
             id
         }
@@ -35,7 +35,7 @@ export const getGlobalLeaderboardData = async () => {
   for (let i = 0; i < 20; i++){
       if (i !==0) 
         skipValue + 1000;
-    
+  
   let dataChunk = await client.query({
         query: getGlobalLeaderboardDataQuery,
         variables: { skipValue: skipValue },
