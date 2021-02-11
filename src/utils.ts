@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { groupBy }  from "lodash";
-import { LeaderBoardPosition, Position, BoardData } from "./interfaces";
+import { LeaderBoardPosition, MarketPosition, BoardData } from "./interfaces";
 
 
 // Following two functions taken from https://github.com/TokenUnion/amm-maths/blob/master/src/utils.ts by Tom French
@@ -28,10 +28,11 @@ const divBN = (a: BigNumber, b: BigNumberish, scale = 10000): number => {
  *@function getEarnings - calculates winnings from graphQl query result
  @param {Object} position - the market position object
  */
-export const getEarnings = (position: Position) => {
+export const getEarnings = (position: MarketPosition) => {
+     console.log(position)
     const netQuantity = BigNumber.from(position.netQuantity);
     const outcomeTokenPrice = Number(
-        position.market.outcomeTokenPrices[position.outcomeIndex],
+        position.market.outcomeTokenPrices[Number(position.outcomeIndex)],
     );
     const valueSold = BigNumber.from(position.valueSold);
     const valueBought = BigNumber.from(position.valueBought);
@@ -43,10 +44,11 @@ export const getEarnings = (position: Position) => {
  *@function getROI - calculates ROI from graphQl query result
  @param {Object} position - the market position object
  */
-export const getROI = (position: Position) => {
+export const getROI = (position: MarketPosition) => {
+    
     const netQuantity = BigNumber.from(position.netQuantity);
     const outcomeTokenPrice = Number(
-        position.market.outcomeTokenPrices[position.outcomeIndex],
+        position.market.outcomeTokenPrices[Number(position.outcomeIndex)],
     );
     const valueSold = BigNumber.from(position.valueSold);
     const valueBought = BigNumber.from(position.valueBought);
@@ -60,11 +62,12 @@ export const getROI = (position: Position) => {
  * @param {Object} data - the data fetched by graphQL query from polymarket subgraph
  *
  */
-export const getAllPositions = (data: Array<Position>) => {
+export const getAllPositions = (data: Array<MarketPosition>) => {
     const allPositions: LeaderBoardPosition[] = [];
-    console.log(data);
-    data.forEach((position: Position) => {
+ 
+    data.forEach((position: MarketPosition) => {
         const earnings = getEarnings(position);
+       
         const roi = getROI(position);
         const positionObject = {
             user: position.user.id,
@@ -100,6 +103,9 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
             (t, { earnings }) => t.add(BigNumber.from(earnings)),
             BigNumber.from(0),
         );
+        if (totalEarnings.lt(0)){
+            return
+        }
         const totalROI = Object.values(position).reduce(
             (t, { roi }) => t + roi,
             0,

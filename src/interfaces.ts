@@ -3,18 +3,23 @@ import { BigNumber } from "@ethersproject/bignumber";
 export interface BoardData {
     leaderBoardPositions: LeaderBoardPosition[];
 }
-export interface QueryData {
-    marketPositions : Position[];
-}
-
-export interface Position {
-    user: { id: string };
+export interface MarketPosition {
+    market: {
+        id?: string;
+        outcomeTokenPrices: string[];
+        conditions?: {
+            payouts: string[];
+        }[];
+    };
+    user: {
+        id: string;
+    }
+    outcomeIndex: string;
+    quantityBought: string;
     netQuantity: string;
-    market: { outcomeTokenPrices: string[] };
-    outcomeIndex: number;
-    valueSold: string;
     valueBought: string;
- 
+    valueSold: string;
+    netValue?: string;
 }
 export interface LeaderBoardPosition {
     user: string;
