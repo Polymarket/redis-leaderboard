@@ -103,9 +103,7 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
             (t, { earnings }) => t.add(BigNumber.from(earnings)),
             BigNumber.from(0),
         );
-        if (totalEarnings.lt(0)){
-            return
-        }
+   
         const totalROI =  divBN(totalEarnings, totalInvested) * 100;
         
 
