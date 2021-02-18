@@ -135,7 +135,8 @@ export const getTopTen = (
     aggregatedPositions: LeaderBoardPosition[],
 ): BoardData => {
     aggregatedPositions.sort((a, b) => {
-        return b.roi - a.roi }
+        return Number(b.earnings) - Number(a.earnings)
+     }
     );
     const board: LeaderBoardPosition[] = aggregatedPositions.slice(0, 10);
     const topTen: BoardData = {
