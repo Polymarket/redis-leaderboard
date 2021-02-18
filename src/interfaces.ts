@@ -13,6 +13,9 @@ export interface MarketPosition {
     };
     user: {
         id: string;
+        transactions: {
+            timestamp: string;
+        }
     }
     outcomeIndex: string;
     quantityBought: string;
@@ -22,6 +25,7 @@ export interface MarketPosition {
     netValue?: string;
 }
 export interface LeaderBoardPosition {
+    trades: number;
     user: string;
     invested: string;
     earnings: string;
