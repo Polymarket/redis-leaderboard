@@ -2,7 +2,7 @@ import redis from "redis";
 import express from "express";
 import cors from "cors";
 import { getLeaderboardData } from "./getLeaderboardData";
-import { RedisLeaderBoardPositions, BoardData } from "./interfaces";
+import { RedisLeaderboardPositions, BoardData } from "./interfaces";
 import getGlobalLeaderboardData from "./getGlobalLeadeboardData";
 
 const client = redis.createClient({
@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 8000;
 
-const CACHE_TTL = 1000;
+const CACHE_TTL = 1000 * 60 * 60;
 
 app.get("/", async (req, res) => {
     res.send({
@@ -32,7 +32,7 @@ const updateCache = (
     data: BoardData,
     callback: (err: Error | null, reply: string) => void,
 ) => {
-    const cachedData: RedisLeaderBoardPositions = {
+    const cachedData: RedisLeaderboardPositions = {
         ...data,
         lastUpdate: new Date().getTime(),
     };
@@ -61,7 +61,7 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
             return res.json(data);
         }
         console.log("Reply exists reply", reply);
-        const data: RedisLeaderBoardPositions = JSON.parse(reply);
+        const data: RedisLeaderboardPositions = JSON.parse(reply);
         res.json(data);
 
         // Update if expired
@@ -87,7 +87,7 @@ const updateGlobalCache = (
     data: BoardData,
     callback: (err: Error | null, reply: string) => void,
 ) => {
-    const cachedData: RedisLeaderBoardPositions = {
+    const cachedData: RedisLeaderboardPositions = {
         ...data,
         lastUpdate: new Date().getTime(),
     };
@@ -115,7 +115,7 @@ app.get("/globalLeaderboard", async (req, res) => {
             return res.json(data);
         }
         console.log("Reply exists reply", reply);
-        const data: RedisLeaderBoardPositions = JSON.parse(reply);
+        const data: RedisLeaderboardPositions = JSON.parse(reply);
         res.json(data);
 
         // Update if expired
@@ -141,3 +141,4 @@ app.get("/globalLeaderboard", async (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
+

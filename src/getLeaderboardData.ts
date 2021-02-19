@@ -9,7 +9,7 @@ const getLeaderboardDataQuery = gql`
             user {
                 id
                 transactions {
-                    timestamp
+                    type
                   }
             }
             outcomeIndex

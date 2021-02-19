@@ -1,7 +1,7 @@
-import { BigNumber } from "@ethersproject/bignumber";
+
 
 export interface BoardData {
-    leaderBoardPositions: LeaderBoardPosition[];
+    leaderboardPositions: LeaderboardPosition[];
 }
 export interface MarketPosition {
     market: {
@@ -16,7 +16,9 @@ export interface MarketPosition {
         transactions: {
             timestamp: string;
         }
+        collateralVolume: string;
     }
+   
     outcomeIndex: string;
     quantityBought: string;
     netQuantity: string;
@@ -24,14 +26,15 @@ export interface MarketPosition {
     valueSold: string;
     netValue?: string;
 }
-export interface LeaderBoardPosition {
-    trades: number;
+export interface LeaderboardPosition {
     user: string;
+    trades: number;
+    
     invested: string;
     earnings: string;
     roi: number;
 }
-export interface RedisLeaderBoardPositions extends BoardData {
+export interface RedisLeaderboardPositions extends BoardData {
     lastUpdate: number;
 }
 

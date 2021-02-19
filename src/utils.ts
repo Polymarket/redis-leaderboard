@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { groupBy }  from "lodash";
-import { LeaderBoardPosition, MarketPosition, BoardData } from "./interfaces";
+import { LeaderboardPosition, MarketPosition, BoardData } from "./interfaces";
 
 
 // Following two functions taken from https://github.com/TokenUnion/amm-maths/blob/master/src/utils.ts by Tom French
@@ -64,7 +64,7 @@ export const getROI = (position: MarketPosition) => {
  *
  */
 export const getAllPositions = (data: Array<MarketPosition>) => {
-    const allPositions: LeaderBoardPosition[] = [];
+    const allPositions: LeaderboardPosition[] = [];
  
     data.forEach((position: MarketPosition) => {
         const earnings = getEarnings(position);
@@ -88,8 +88,8 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
  * @param {Array} allPositions - array of all market position objects
  *
  */
-export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
-    const aggregatedPositions: LeaderBoardPosition[] = [];
+export const getAggregatedPositions = (allPositions: LeaderboardPosition[]) => {
+    const aggregatedPositions: LeaderboardPosition[] = [];
     const positionsByUser = groupBy(
         allPositions,
         (position) => position.user,
@@ -132,15 +132,15 @@ export const getAggregatedPositions = (allPositions: LeaderBoardPosition[]) => {
  *
  */
 export const getTopTen = (
-    aggregatedPositions: LeaderBoardPosition[],
+    aggregatedPositions: LeaderboardPosition[],
 ): BoardData => {
     aggregatedPositions.sort((a, b) => {
         return Number(b.earnings) - Number(a.earnings)
      }
     );
-    const board: LeaderBoardPosition[] = aggregatedPositions.slice(0, 10);
+    const board: LeaderboardPosition[] = aggregatedPositions.slice(0, 10);
     const topTen: BoardData = {
-        leaderBoardPositions: board,
+        leaderboardPositions: board,
     };
     return topTen;
 };
