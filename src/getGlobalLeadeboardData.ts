@@ -12,9 +12,9 @@ query positions($skipValue: Int!)         {
         user {
             id
             transactions {
-                timestamp
+                type
               }
-              collateralVolume
+             
         }
         outcomeIndex
         valueBought
