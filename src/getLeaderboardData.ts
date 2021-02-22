@@ -8,9 +8,7 @@ const getLeaderboardDataQuery = gql`
         marketPositions(where: { market: $marketAddress, valueBought_gt: 0 }, first: 1000) {
             user {
                 id
-                transactions {
-                    type
-                  }
+               
             }
             outcomeIndex
             valueBought
