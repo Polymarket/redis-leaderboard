@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 8000;
 
-const CACHE_TTL = 1000;
+const CACHE_TTL = 1000 * 60 * 60;
 
 app.get("/", async (req, res) => {
     res.send({
