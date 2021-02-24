@@ -11,7 +11,9 @@ query positions($skipValue: Int!)         {
     marketPositions(where: {valueBought_gt: 0}, first: 1000, skip: $skipValue){
         user {
             id
-            
+            transactions(first: 1000, skip: $skipValue) {
+                type
+                }
              
         }
         outcomeIndex

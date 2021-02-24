@@ -73,6 +73,7 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
         const positionObject = {
            
             user: position.user.id,
+            trades: Object.keys(position.user.transactions).length,
             earnings : earnings.toString(),
             invested: position.valueBought,
             roi,
@@ -106,14 +107,15 @@ export const getAggregatedPositions = (allPositions: LeaderboardPosition[]) => {
             (t, { earnings }) => t.add(BigNumber.from(earnings)),
             BigNumber.from(0),
         );
-   
+    
+      
         const totalROI =  divBN(totalEarnings, totalInvested) * 100;
         
 
         const obj = {
            
             user: position[0].user,
-         
+            trades: position[0].trades,
             invested: totalInvested.toString(),
             earnings: totalEarnings.toString(),
             roi: totalROI,
@@ -135,7 +137,7 @@ export const getTopTen = (
         return Number(b.earnings) - Number(a.earnings)
      }
     );
-    const board: LeaderboardPosition[] = aggregatedPositions.slice(0, 10);
+    const board: LeaderboardPosition[] = aggregatedPositions.slice(0, 100);
     const topTen: BoardData = {
         leaderboardPositions: board,
     };
