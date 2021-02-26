@@ -19,7 +19,7 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 8000;
 
-const CACHE_TTL = 1000 * 60 * 60;
+const CACHE_TTL = 1000 //* 60 * 60;
 
 app.get("/", async (req, res) => {
     res.send({
@@ -36,7 +36,7 @@ const updateCache = (
         ...data,
         lastUpdate: new Date().getTime(),
     };
-    console.log("cachedData", cachedData);
+   
 
     client.set(marketMakerAddress, JSON.stringify(cachedData), callback);
 };
@@ -46,7 +46,7 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
     console.log("marketMakerAddress", marketMakerAddress);
 
     client.get(marketMakerAddress, async (_err, reply) => {
-        console.log("reply", reply);
+        
         if (!reply) {
             console.log("Talking to subgraph");
 
@@ -56,11 +56,11 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
                 return res.status(404).send({ status: "Not Found" });
             }
 
-            console.log("!reply data", data);
+            console.log("!reply data");
             updateCache(marketMakerAddress, data, redis.print);
             return res.json(data);
         }
-        console.log("Reply exists reply", reply);
+       
         const data: RedisLeaderboardPositions = JSON.parse(reply);
         res.json(data);
 
@@ -91,7 +91,7 @@ const updateGlobalCache = (
         ...data,
         lastUpdate: new Date().getTime(),
     };
-    console.log("cachedData", cachedData);
+  
 
     client.set("globalLeaderboard", JSON.stringify(cachedData), callback);
 };
@@ -100,7 +100,7 @@ app.get("/globalLeaderboard", async (req, res) => {
    
 
     client.get("globalLeaderboard", async (_err, reply) => {
-        console.log("reply", reply);
+       
         if (!reply) {
             console.log("Talking to subgraph");
 
@@ -110,11 +110,11 @@ app.get("/globalLeaderboard", async (req, res) => {
                 return res.status(404).send({ status: "Not Found" });
             }
 
-            console.log("!reply data", data);
+            console.log("!reply data");
             updateGlobalCache( data, redis.print);
             return res.json(data);
         }
-        console.log("Reply exists reply", reply);
+      
         const data: RedisLeaderboardPositions = JSON.parse(reply);
         res.json(data);
 

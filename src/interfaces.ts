@@ -13,9 +13,7 @@ export interface MarketPosition {
     };
     user: {
         id: string;
-        transactions: {
-            type: string;
-        }
+        numTrades: string;
         collateralVolume: string;
     }
    
@@ -28,7 +26,7 @@ export interface MarketPosition {
 }
 export interface LeaderboardPosition {
     user: string;
-    trades: number;
+    trades: string;
     
     invested: string;
     earnings: string;

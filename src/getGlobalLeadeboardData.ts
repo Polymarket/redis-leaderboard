@@ -8,12 +8,10 @@ import {MarketPosition} from "./interfaces";
 const getGlobalLeaderboardDataQuery = gql`
      
 query positions($skipValue: Int!)         {
-    marketPositions(where: {valueBought_gt: 0}, first: 1000, skip: $skipValue){
+    marketPositions(where: {valueBought_gt: 0}, first: 1000, skip: $skipValue, orderBy: valueBought, orderDirection: desc){
         user {
             id
-            transactions(first: 1000, skip: $skipValue) {
-                type
-                }
+            numTrades
              
         }
         outcomeIndex
@@ -29,29 +27,28 @@ query positions($skipValue: Int!)         {
 const client = new ApolloClient({
     uri:
         process.env.SUBGRAPH_URL ||
-        "https://subgraph-matic.poly.market/subgraphs/name/TokenUnion/polymarket",
+        "https://api.thegraph.com/subgraphs/name/tokenunion/polymarket-matic",
     cache: new InMemoryCache(),
 });
 
 export const getGlobalLeaderboardData = async () => {
     let skipValue = 0;
     let data: MarketPosition[] = [];
-  for (let i = 0; i < 20; i++){
-      if (i !==0) 
-        skipValue + 1000;
-  
-  let dataChunk = await client.query({
+  for (let i = 0; i < 5; i++){
+    
+        
+         let dataChunk = await client.query({
         query: getGlobalLeaderboardDataQuery,
         variables: { skipValue: skipValue },
     });
   
    dataChunk.data.marketPositions.forEach((element: MarketPosition) => {
        data.push(element)
-       if (dataChunk.data.marketPositions.length < 1000) {
-           return
-       }
+     
+      
    });
-    
+   skipValue += 1000;
+   console.log(skipValue);
 }  
 
     const allPositions = getAllPositions(data);

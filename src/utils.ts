@@ -65,7 +65,7 @@ export const getROI = (position: MarketPosition) => {
  */
 export const getAllPositions = (data: Array<MarketPosition>) => {
     const allPositions: LeaderboardPosition[] = [];
- 
+    
     data.forEach((position: MarketPosition) => {
         const earnings = getEarnings(position);
       
@@ -73,7 +73,7 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
         const positionObject = {
            
             user: position.user.id,
-            trades: Object.keys(position.user.transactions).length,
+            trades: position.user.numTrades,
             earnings : earnings.toString(),
             invested: position.valueBought,
             roi,
@@ -81,6 +81,7 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
 
         allPositions.push(positionObject);
     });
+
     return allPositions;
 };
 
@@ -95,6 +96,7 @@ export const getAggregatedPositions = (allPositions: LeaderboardPosition[]) => {
         allPositions,
         (position) => position.user,
     );
+
 
 
     Object.values(positionsByUser).forEach((position) => {

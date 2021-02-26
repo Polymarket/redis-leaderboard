@@ -8,9 +8,7 @@ const getLeaderboardDataQuery = gql`
         marketPositions(where: { market: $marketAddress, valueBought_gt: 0 }, first: 1000) {
             user {
                 id
-                transactions(where: {market: $marketAddress} first: 1000) {
-                type
-                }
+                numTrades
             }
             outcomeIndex
             valueBought
@@ -26,7 +24,7 @@ const getLeaderboardDataQuery = gql`
 const client = new ApolloClient({
     uri:
         process.env.SUBGRAPH_URL ||
-        "https://subgraph-matic.poly.market/subgraphs/name/TokenUnion/polymarket",
+        "https://api.thegraph.com/subgraphs/name/tokenunion/polymarket-matic",
     cache: new InMemoryCache(),
 });
 /**
