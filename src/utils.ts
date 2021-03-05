@@ -60,10 +60,8 @@ export const getROI = (position: MarketPosition) => {
  * @param {Object} data - the data fetched by graphQL query from polymarket subgraph
  *
  */
-export const getAllPositions = (data: Array<MarketPosition>) => {
-    const allPositions: LeaderboardPosition[] = [];
-
-    data.forEach((position: MarketPosition) => {
+export const getAllPositions = (data: Array<MarketPosition>) =>
+    data.map((position: MarketPosition) => {
         const earnings = getEarnings(position);
 
         const roi = getROI(position);
@@ -75,11 +73,8 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
             roi,
         };
 
-        allPositions.push(positionObject);
+        return positionObject;
     });
-
-    return allPositions;
-};
 
 /**
  * @function getAggregatedPositions - groups positions by user and aggregates the earnings and investment
@@ -87,10 +82,9 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
  *
  */
 export const getAggregatedPositions = (allPositions: LeaderboardPosition[]) => {
-    const aggregatedPositions: LeaderboardPosition[] = [];
     const positionsByUser = groupBy(allPositions, (position) => position.user);
 
-    Object.values(positionsByUser).forEach((position) => {
+    return Object.values(positionsByUser).map((position) => {
         const totalInvested = Object.values(position).reduce<BigNumber>(
             (t, { invested }) => t.add(BigNumber.from(invested)),
             BigNumber.from(0),
@@ -103,16 +97,14 @@ export const getAggregatedPositions = (allPositions: LeaderboardPosition[]) => {
 
         const totalROI = divBN(totalEarnings, totalInvested) * 100;
 
-        const obj = {
+        return {
             user: position[0].user,
             trades: position[0].trades,
             invested: totalInvested.toString(),
             earnings: totalEarnings.toString(),
             roi: totalROI,
         };
-        aggregatedPositions.push(obj);
     });
-    return aggregatedPositions;
 };
 
 /**
