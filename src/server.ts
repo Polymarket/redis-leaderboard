@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { getLeaderboardData } from "./getLeaderboardData";
 import { RedisLeaderboardPositions, BoardData } from "./interfaces";
-import { getGlobalLeaderboardData } from "./getGlobalLeadeboardData";
+import { getGlobalLeaderboardData } from "./getGlobalLeaderboardData";
 
 const client = redis.createClient({
     url:
