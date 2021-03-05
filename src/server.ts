@@ -27,6 +27,10 @@ app.get("/", async (req, res) => {
             "Just make a GET /leaderboard/:marketMakerAddress to retrieve the leaderboard data",
     });
 });
+
+const cacheExpired = (lastUpdate: number | undefined) =>
+    !lastUpdate || lastUpdate + CACHE_TTL < Date.now();
+
 const updateCache = (
     marketMakerAddress: string,
     data: BoardData,
@@ -63,7 +67,7 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
         res.json(data);
 
         // Update if expired
-        if (!data.lastUpdate || data.lastUpdate + CACHE_TTL < Date.now()) {
+        if (cacheExpired(data.lastUpdate)) {
             // Update cache with current data then overwrite
             // This avoids re-fetching tens of times
             updateCache(marketMakerAddress, data, async () => {
@@ -110,7 +114,7 @@ app.get("/globalLeaderboard", async (req, res) => {
         res.json(data);
 
         // Update if expired
-        if (!data.lastUpdate || data.lastUpdate + CACHE_TTL < Date.now()) {
+        if (cacheExpired(data.lastUpdate)) {
             // Update cache with current data then overwrite
             // This avoids re-fetching tens of times
             updateGlobalCache(data, async () => {
