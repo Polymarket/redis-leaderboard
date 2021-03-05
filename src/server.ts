@@ -19,7 +19,9 @@ app.use(cors());
 app.use(express.json());
 const port = process.env.PORT || 8000;
 
-const CACHE_TTL = 1000 * 60 * 60;
+const CACHE_TTL_MINS: number =
+    parseInt(process.env.CACHE_TTL_MINS as string, 10) || 10; // default to 10 minutes
+const CACHE_TTL = 1000 * 60 * CACHE_TTL_MINS; // In ms
 
 app.get("/", async (req, res) => {
     res.send({
