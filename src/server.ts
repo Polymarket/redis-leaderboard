@@ -41,7 +41,7 @@ const updateCache = (
 };
 
 app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
-    const { marketMakerAddress } = req.params;
+    const marketMakerAddress = req.params.marketMakerAddress.toLowerCase();
     console.log("marketMakerAddress", marketMakerAddress);
 
     client.get(marketMakerAddress, async (_err, reply) => {
