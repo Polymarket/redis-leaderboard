@@ -34,7 +34,7 @@ const updateCache = (
 ) => {
     const cachedData: RedisLeaderboardPositions = {
         ...data,
-        lastUpdate: new Date().getTime(),
+        lastUpdate: Date.now(),
     };
 
     client.set(marketMakerAddress, JSON.stringify(cachedData), callback);
@@ -63,10 +63,7 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
         res.json(data);
 
         // Update if expired
-        if (
-            !data.lastUpdate ||
-            data.lastUpdate + CACHE_TTL < new Date().getTime()
-        ) {
+        if (!data.lastUpdate || data.lastUpdate + CACHE_TTL < Date.now()) {
             // Update cache with current data then overwrite
             // This avoids re-fetching tens of times
             updateCache(marketMakerAddress, data, async () => {
@@ -87,7 +84,7 @@ const updateGlobalCache = (
 ) => {
     const cachedData: RedisLeaderboardPositions = {
         ...data,
-        lastUpdate: new Date().getTime(),
+        lastUpdate: Date.now(),
     };
 
     client.set("globalLeaderboard", JSON.stringify(cachedData), callback);
@@ -113,10 +110,7 @@ app.get("/globalLeaderboard", async (req, res) => {
         res.json(data);
 
         // Update if expired
-        if (
-            !data.lastUpdate ||
-            data.lastUpdate + CACHE_TTL < new Date().getTime()
-        ) {
+        if (!data.lastUpdate || data.lastUpdate + CACHE_TTL < Date.now()) {
             // Update cache with current data then overwrite
             // This avoids re-fetching tens of times
             updateGlobalCache(data, async () => {
