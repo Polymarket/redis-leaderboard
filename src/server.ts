@@ -3,7 +3,7 @@ import express from "express";
 import cors from "cors";
 import { getLeaderboardData } from "./getLeaderboardData";
 import { RedisLeaderboardPositions, BoardData } from "./interfaces";
-import getGlobalLeaderboardData from "./getGlobalLeadeboardData";
+import { getGlobalLeaderboardData } from "./getGlobalLeadeboardData";
 
 const client = redis.createClient({
     url:
@@ -36,7 +36,6 @@ const updateCache = (
         ...data,
         lastUpdate: new Date().getTime(),
     };
-   
 
     client.set(marketMakerAddress, JSON.stringify(cachedData), callback);
 };
@@ -46,7 +45,6 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
     console.log("marketMakerAddress", marketMakerAddress);
 
     client.get(marketMakerAddress, async (_err, reply) => {
-        
         if (!reply) {
             console.log("Talking to subgraph");
 
@@ -60,7 +58,7 @@ app.get("/leaderboard/:marketMakerAddress", async (req, res) => {
             updateCache(marketMakerAddress, data, redis.print);
             return res.json(data);
         }
-       
+
         const data: RedisLeaderboardPositions = JSON.parse(reply);
         res.json(data);
 
@@ -91,16 +89,12 @@ const updateGlobalCache = (
         ...data,
         lastUpdate: new Date().getTime(),
     };
-  
 
     client.set("globalLeaderboard", JSON.stringify(cachedData), callback);
 };
 
 app.get("/globalLeaderboard", async (req, res) => {
-   
-
     client.get("globalLeaderboard", async (_err, reply) => {
-       
         if (!reply) {
             console.log("Talking to subgraph");
 
@@ -111,10 +105,10 @@ app.get("/globalLeaderboard", async (req, res) => {
             }
 
             console.log("!reply data");
-            updateGlobalCache( data, redis.print);
+            updateGlobalCache(data, redis.print);
             return res.json(data);
         }
-      
+
         const data: RedisLeaderboardPositions = JSON.parse(reply);
         res.json(data);
 
@@ -125,11 +119,8 @@ app.get("/globalLeaderboard", async (req, res) => {
         ) {
             // Update cache with current data then overwrite
             // This avoids re-fetching tens of times
-            updateGlobalCache( data, async () => {
-                console.log(
-                    "Data Reupdate in global board",
-                  
-                );
+            updateGlobalCache(data, async () => {
+                console.log("Data Reupdate in global board");
                 // Update the data secretly
                 const newData = await getGlobalLeaderboardData();
                 updateGlobalCache(newData, redis.print);
@@ -141,4 +132,3 @@ app.get("/globalLeaderboard", async (req, res) => {
 app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`);
 });
-

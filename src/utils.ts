@@ -1,7 +1,6 @@
 import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
-import { groupBy }  from "lodash";
+import { groupBy } from "lodash";
 import { LeaderboardPosition, MarketPosition, BoardData } from "./interfaces";
-
 
 // Following two functions taken from https://github.com/TokenUnion/amm-maths/blob/master/src/utils.ts by Tom French
 /**
@@ -29,7 +28,6 @@ const divBN = (a: BigNumber, b: BigNumberish, scale = 10000): number => {
  @param {Object} position - the market position object
  */
 export const getEarnings = (position: MarketPosition) => {
-
     const netQuantity = BigNumber.from(position.netQuantity);
     const outcomeTokenPrice = Number(
         position.market.outcomeTokenPrices[Number(position.outcomeIndex)],
@@ -45,12 +43,11 @@ export const getEarnings = (position: MarketPosition) => {
  @param {Object} position - the market position object
  */
 export const getROI = (position: MarketPosition) => {
-    
     const netQuantity = BigNumber.from(position.netQuantity);
     const outcomeTokenPrice = Number(
         position.market.outcomeTokenPrices[Number(position.outcomeIndex)],
     );
-  
+
     const valueSold = BigNumber.from(position.valueSold);
     const valueBought = BigNumber.from(position.valueBought);
     const netValue = mulBN(netQuantity, outcomeTokenPrice);
@@ -65,16 +62,15 @@ export const getROI = (position: MarketPosition) => {
  */
 export const getAllPositions = (data: Array<MarketPosition>) => {
     const allPositions: LeaderboardPosition[] = [];
-    
+
     data.forEach((position: MarketPosition) => {
         const earnings = getEarnings(position);
-      
+
         const roi = getROI(position);
         const positionObject = {
-           
             user: position.user.id,
             trades: position.user.numTrades,
-            earnings : earnings.toString(),
+            earnings: earnings.toString(),
             invested: position.valueBought,
             roi,
         };
@@ -92,30 +88,22 @@ export const getAllPositions = (data: Array<MarketPosition>) => {
  */
 export const getAggregatedPositions = (allPositions: LeaderboardPosition[]) => {
     const aggregatedPositions: LeaderboardPosition[] = [];
-    const positionsByUser = groupBy(
-        allPositions,
-        (position) => position.user,
-    );
-
-
+    const positionsByUser = groupBy(allPositions, (position) => position.user);
 
     Object.values(positionsByUser).forEach((position) => {
         const totalInvested = Object.values(position).reduce<BigNumber>(
-            (t, { invested }) => t.add( BigNumber.from(invested)),
+            (t, { invested }) => t.add(BigNumber.from(invested)),
             BigNumber.from(0),
         );
-     
+
         const totalEarnings = Object.values(position).reduce<BigNumber>(
             (t, { earnings }) => t.add(BigNumber.from(earnings)),
             BigNumber.from(0),
         );
-    
-      
-        const totalROI =  divBN(totalEarnings, totalInvested) * 100;
-        
+
+        const totalROI = divBN(totalEarnings, totalInvested) * 100;
 
         const obj = {
-           
             user: position[0].user,
             trades: position[0].trades,
             invested: totalInvested.toString(),
@@ -136,9 +124,8 @@ export const getTopTen = (
     aggregatedPositions: LeaderboardPosition[],
 ): BoardData => {
     aggregatedPositions.sort((a, b) => {
-        return Number(b.earnings) - Number(a.earnings)
-     }
-    );
+        return Number(b.earnings) - Number(a.earnings);
+    });
     const board: LeaderboardPosition[] = aggregatedPositions.slice(0, 100);
     const topTen: BoardData = {
         leaderboardPositions: board,

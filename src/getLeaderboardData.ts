@@ -5,7 +5,10 @@ import { getAllPositions, getAggregatedPositions, getTopTen } from "./utils";
 
 const getLeaderboardDataQuery = gql`
     query positions($marketAddress: String!) {
-        marketPositions(where: { market: $marketAddress, valueBought_gt: 0 }, first: 1000) {
+        marketPositions(
+            where: { market: $marketAddress, valueBought_gt: 0 }
+            first: 1000
+        ) {
             user {
                 id
                 numTrades
@@ -29,7 +32,7 @@ const client = new ApolloClient({
 });
 /**
  * @function getLeaderboardData - fetches market data and calculates top ten traders for a given market address
- * @param {string} marketMakerAddress - the market address 
+ * @param {string} marketMakerAddress - the market address
  */
 export const getLeaderboardData = async (marketMakerAddress: string) => {
     const data = await client.query({
