@@ -2,7 +2,7 @@ import { BigNumber, BigNumberish } from "@ethersproject/bignumber";
 import { groupBy } from "lodash";
 import { LeaderboardPosition, MarketPosition, BoardData } from "./interfaces";
 
-// Following two functions taken from https://github.com/TokenUnion/amm-maths/blob/master/src/utils.ts by Tom French
+// Following two functions taken from https://github.com/Polymarket/amm-maths/blob/master/src/utils.ts by Tom French
 /**
  * Performs multiplication between a BigNumber and a decimal number while temporarily scaling the decimal to preserve precision
  * @param a - a BigNumber to multiply by b
